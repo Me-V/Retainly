@@ -1,0 +1,16 @@
+{
+    "boards": ["CBSE", "ICSE", "State"],
+    "classes": [8, 9, 10, 11, 12],
+    "streams": ["Science", "Commerce", "Arts"],
+    "subjects": [
+      {"id":"math","name":"Mathematics"},
+      {"id":"sci","name":"Science"},
+      {"id":"eng","name":"English"}
+    ],
+    "topics": [
+      {"subjectId":"math","title":"Calculus","description":"Intro to Calculus"},
+      {"subjectId":"sci","title":"Photosynthesis","description":"Process in plants"},
+      {"subjectId":"eng","title":"Grammar","description":"Basic parts of speech"}
+    ]
+  }
+  
