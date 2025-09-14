@@ -54,7 +54,7 @@ const SignUpScreen = () => {
   };
 
   const handleBack = () => {
-    router.back(); 
+    router.back();
   };
 
   const renderItem = ({
@@ -174,49 +174,50 @@ const SignUpScreen = () => {
           </View>
         </Modal>
       </View>
+      {selectedClass && selectedClass > 10 && (
+        <View className="mb-6">
+          <Text className="text-lg text-textDark mb-2">Stream</Text>
+          <TouchableOpacity
+            className="border border-gray-300 rounded-xl p-4 bg-white"
+            onPress={() => setShowStreamModal(true)}
+          >
+            <Text className="text-textDark">
+              {selectedStream || "Select stream (optional)"}
+            </Text>
+          </TouchableOpacity>
 
-      <View className="mb-6">
-        <Text className="text-lg text-textDark mb-2">Stream</Text>
-        <TouchableOpacity
-          className="border border-gray-300 rounded-xl p-4 bg-white"
-          onPress={() => setShowStreamModal(true)}
-        >
-          <Text className="text-textDark">
-            {selectedStream || "Select stream (optional)"}
-          </Text>
-        </TouchableOpacity>
-
-        <Modal visible={showStreamModal} transparent animationType="slide">
-          <View className="flex-1 justify-center items-center bg-black/50">
-            <View className="bg-white rounded-xl w-80 max-h-80">
-              <View className="p-4 border-b border-gray-200">
-                <Text className="text-lg font-semibold text-textDark">
-                  Select Stream
-                </Text>
+          <Modal visible={showStreamModal} transparent animationType="slide">
+            <View className="flex-1 justify-center items-center bg-black/50">
+              <View className="bg-white rounded-xl w-80 max-h-80">
+                <View className="p-4 border-b border-gray-200">
+                  <Text className="text-lg font-semibold text-textDark">
+                    Select Stream
+                  </Text>
+                </View>
+                <FlatList
+                  data={curriculum.streams}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) =>
+                    renderItem({
+                      item,
+                      onPress: () => {
+                        setSelectedStream(item);
+                        setShowStreamModal(false);
+                      },
+                    })
+                  }
+                />
+                <TouchableOpacity
+                  className="p-4 border-t border-gray-200 items-center"
+                  onPress={() => setShowStreamModal(false)}
+                >
+                  <Text className="text-primary font-semibold">Cancel</Text>
+                </TouchableOpacity>
               </View>
-              <FlatList
-                data={curriculum.streams}
-                keyExtractor={(item) => item}
-                renderItem={({ item }) =>
-                  renderItem({
-                    item,
-                    onPress: () => {
-                      setSelectedStream(item);
-                      setShowStreamModal(false);
-                    },
-                  })
-                }
-              />
-              <TouchableOpacity
-                className="p-4 border-t border-gray-200 items-center"
-                onPress={() => setShowStreamModal(false)}
-              >
-                <Text className="text-primary font-semibold">Cancel</Text>
-              </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
-      </View>
+          </Modal>
+        </View>
+      )}
 
       <TouchableOpacity
         className="bg-[#FE904B] rounded-xl py-4 px-6 items-center"
