@@ -6,6 +6,7 @@ import {
   Alert,
   ScrollView,
   Image,
+  useWindowDimensions,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
@@ -13,8 +14,9 @@ import { useAuth } from "@/context/AuthContext";
 const QuestionsScreen = () => {
   const router = useRouter();
   const { logout } = useAuth();
-
   const { topic } = useLocalSearchParams();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
 
   const questions = [
     "What is the derivative of x²?",
@@ -24,53 +26,79 @@ const QuestionsScreen = () => {
   ];
 
   const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to log out?",
-      [
-        {
-          text: "No",
-          style: "cancel"
+    Alert.alert("Logout", "Are you sure you want to log out?", [
+      { text: "No", style: "cancel" },
+      {
+        text: "Yes",
+        onPress: async () => {
+          await logout();
+          router.replace("/");
         },
-        { 
-          text: "Yes", 
-          onPress: async () => {
-            await logout();
-            router.replace('/');
-          }
-        }
-      ]
-    );
+      },
+    ]);
   };
 
   return (
-    <View className="flex-1 bg-[#F8F8F8] p-6">
-      <View className="items-center mb-2 mt-10">
+    <View className="flex-1 bg-[#F8F8F8]" style={{ padding: isTablet ? 32 : 16 }}>
+      {/* Logo */}
+      <View className="items-center mb-4 mt-2">
         <Image
           source={require("../assets/companyLogo.png")}
-          className="w-48 h-48 mb-4"
+          style={{
+            width: isTablet ? 250 : 180,
+            height: isTablet ? 250 : 180,
+            marginBottom: isTablet ? 0 : 20,
+            resizeMode: "contain",
+          }}
         />
       </View>
-      <Text className="text-2xl font-bold text-textDark mb-6 text-center">
+
+      {/* Topic Title */}
+      <Text
+        className="font-bold text-textDark mb-6 text-center"
+        style={{ fontSize: isTablet ? 28 : 22 }}
+      >
         {topic}
       </Text>
 
-      <ScrollView className="flex-1">
+      {/* Questions Grid (2 cols on tablets, 1 col on phones) */}
+      <ScrollView
+        contentContainerStyle={{
+          flexDirection: isTablet ? "row" : "column",
+          flexWrap: isTablet ? "wrap" : "nowrap",
+          justifyContent: "center",
+          gap: isTablet ? 20 : 12,
+        }}
+      >
         {questions.map((question, index) => (
-          <Text
+          <View
             key={index}
-            className="border border-black px-4 py-3 mb-5 rounded-xl text-xl font-semibold"
+            style={{
+              flexBasis: isTablet ? "41%" : "100%",
+            }}
           >
-            {question}
-          </Text>
+            <Text
+              className="border border-black px-4 py-3 rounded-xl font-semibold"
+              style={{ fontSize: isTablet ? 20 : 16, marginBottom: isTablet ? 0 : 12 }}
+            >
+              {question}
+            </Text>
+          </View>
         ))}
       </ScrollView>
 
+      {/* Logout Button */}
       <TouchableOpacity
-        className="border border-[#FE904B] rounded-xl py-4 px-6 items-center mt-6"
         onPress={handleLogout}
+        className="border border-[#FE904B] rounded-xl py-4 px-6 items-center mt-6"
+        style={{ alignSelf: isTablet ? "center" : "stretch", width: isTablet ? "40%" : "100%" }}
       >
-        <Text className="text-[#FE904B] font-bold text-xl">Logout</Text>
+        <Text
+          className="text-[#FE904B] font-bold"
+          style={{ fontSize: isTablet ? 22 : 18 }}
+        >
+          Logout
+        </Text>
       </TouchableOpacity>
     </View>
   );
