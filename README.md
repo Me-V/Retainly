@@ -47,4 +47,9 @@ Expo Go app on your physical device (for testing on real device)
 ## Installation & Setup
 
 Clone the repository
-```vasu```
+```
+git clone <repository-url>
+cd LearnNow
+```
+
+
