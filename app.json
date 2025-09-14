@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Movies Horizon",
+    "name": "Learn Now",
     "slug": "expo-project",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
-    "scheme": "movies",
+    "icon": "./assets/companyLogo.png",
+    "scheme": "education",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,21 +13,22 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo.png",
+        "foregroundImage": "./assets/companyLogo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.thvasu.expoproject"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/logo.png"
+      "favicon": "./assets/companyLogo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo.png",
+          "image": "./assets/companyLogo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -36,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7395952f-1484-45fa-bb05-c0a970dcbc01"
+      }
     }
   }
 }
