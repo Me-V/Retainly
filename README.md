@@ -1,4 +1,4 @@
-# LearnNow Mobile App
+  # LearnNow Mobile App
 
 A React Native mobile application built with Expo, TypeScript, and NativeWind (Tailwind CSS for React Native) for educational purposes.
 
@@ -52,4 +52,59 @@ git clone <repository-url>
 cd LearnNow
 ```
 
+##Install dependencies
+```
+npm install
+# or
+yarn install
+```
+##Install Expo CLI globally (if not already installed)
 
+```
+npm install -g expo-cli
+```
+
+##Start the development server
+
+```
+npm start
+# or
+yarn start
+# or
+expo start
+```
+##Run on specific platform
+
+Press a for Android emulator
+
+Press i for iOS simulator
+
+Scan QR code with Expo Go app for physical device
+
+##Project Structure
+```
+LearnNow/
+├── app/                    # Expo Router pages
+│   ├── _layout.tsx        # Root layout with navigation
+│   ├── index.tsx          # Login screen
+│   ├── signup.tsx         # Education profile setup
+│   ├── subject-selection.tsx # Subject & topic selection
+│   └── questions.tsx      # Dummy questions screen
+├── assets/                # Static assets
+│   ├── curriculum.json    # Curriculum data
+│   └── companyLogo.png    # App logo
+├── components/            # Reusable components
+├── context/               # React Context providers
+│   └── AuthContext.tsx    # Authentication context
+├── types/                 # TypeScript type definitions
+├── constants/             # App constants
+│   └── colors.ts          # Color palette
+```
+
+##Features
+###Authentication Flow
+Simulated login with Google or Phone options
+
+Context-based authentication state management
+
+Automatic redirect based on user profile completion
