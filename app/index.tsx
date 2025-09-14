@@ -14,7 +14,7 @@ const LoginScreen = () => {
   };
 
   const handlePhoneLogin = () => {
-    login(true);
+    login(true); //true means the user is new ...
     router.push("/signup");
   };
   

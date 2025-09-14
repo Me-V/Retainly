@@ -9,67 +9,73 @@ import {
   Image,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Curriculum, Subject, Topic } from "@/types";
+import { Curriculum, ClassStructure } from "@/types";
 import curriculumData from "@/assets/curriculum.json";
+import { useAuth } from "@/context/AuthContext";
 
 const SubjectSelectionScreen = () => {
   const router = useRouter();
-  const curriculum = curriculumData as Curriculum;
+  const { user } = useAuth();
+  const curriculum = curriculumData as unknown as Curriculum;
 
   const [selectedSubject, setSelectedSubject] = useState<string>();
   const [selectedTopic, setSelectedTopic] = useState<string>();
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [showTopicModal, setShowTopicModal] = useState(false);
 
-  const filteredTopics = selectedSubject
-    ? curriculum.topics.filter((topic) => topic.subjectId === selectedSubject)
+  // Get the class data based on user's selected class
+  const classData = user?.class
+    ? curriculum.classes[user.class.toString()]
+    : {};
+
+  // Get subjects for the selected class
+  const subjects = Object.keys(classData);
+
+  // Get topics for the selected subject
+  const topics = selectedSubject
+    ? Object.keys(classData[selectedSubject] || {})
     : [];
 
   const handleContinue = () => {
     if (selectedTopic) {
       router.push({
         pathname: "/questions",
-        params: { topic: selectedTopic },
+        params: {
+          topic: selectedTopic,
+          subject: selectedSubject,
+          class: user?.class?.toString() || "",
+        },
       });
     }
   };
 
-  const renderSubjectItem = ({ item }: { item: Subject }) => (
+  const renderSubjectItem = ({ item }: { item: string }) => (
     <TouchableOpacity
       className="p-4 border-b border-gray-200"
       onPress={() => {
-        setSelectedSubject(item.id);
+        setSelectedSubject(item);
         setSelectedTopic(undefined);
         setShowSubjectModal(false);
       }}
     >
-      <Text className="text-textDark">{item.name}</Text>
+      <Text className="text-textDark">{item}</Text>
     </TouchableOpacity>
   );
 
-  const renderTopicItem = ({ item }: { item: Topic }) => (
+  const renderTopicItem = ({ item }: { item: string }) => (
     <TouchableOpacity
       className="p-4 border-b border-gray-200"
       onPress={() => {
-        setSelectedTopic(item.title);
+        setSelectedTopic(item);
         setShowTopicModal(false);
       }}
     >
-      <Text className="text-textDark">{item.title}</Text>
-      <Text className="text-gray-600 text-sm">{item.description}</Text>
+      <Text className="text-textDark">{item}</Text>
+      <Text className="text-gray-600 text-sm">
+        {classData[selectedSubject || ""][item]?.chapters} chapters
+      </Text>
     </TouchableOpacity>
   );
-
-  const getSelectedSubjectName = () => {
-    return (
-      curriculum.subjects.find((s) => s.id === selectedSubject)?.name ||
-      "Select a subject"
-    );
-  };
-
-  const getSelectedTopicName = () => {
-    return selectedTopic || "Select a topic";
-  };
 
   return (
     <ScrollView className="flex-1 bg-white p-6">
@@ -84,13 +90,25 @@ const SubjectSelectionScreen = () => {
         Select Subject and Topic
       </Text>
 
+      {/* Display user's class and board information */}
+      {user?.class && user?.board && (
+        <View className="bg-[#F8F8F8] p-4 rounded-xl mb-6 mx-2">
+          <Text className="text-lg font-semibold text-textDark text-center">
+            Class {user.class} - {user.board}
+            {user.stream && ` - ${user.stream}`}
+          </Text>
+        </View>
+      )}
+
       <View className="mb-6 mx-2">
         <Text className="text-lg text-textDark mb-2">Subject</Text>
         <TouchableOpacity
-          className="border border-gray-300 rounded-xl p-4"
+          className="border border-gray-300 rounded-xl p-4 bg-white"
           onPress={() => setShowSubjectModal(true)}
         >
-          <Text className="text-textDark">{getSelectedSubjectName()}</Text>
+          <Text className="text-textDark">
+            {selectedSubject || "Select a subject"}
+          </Text>
         </TouchableOpacity>
 
         <Modal
@@ -106,11 +124,19 @@ const SubjectSelectionScreen = () => {
                   Select Subject
                 </Text>
               </View>
-              <FlatList
-                data={curriculum.subjects}
-                keyExtractor={(item) => item.id}
-                renderItem={renderSubjectItem}
-              />
+              {subjects.length > 0 ? (
+                <FlatList
+                  data={subjects}
+                  keyExtractor={(item) => item}
+                  renderItem={renderSubjectItem}
+                />
+              ) : (
+                <View className="p-4 items-center">
+                  <Text className="text-gray-500">
+                    No subjects available for this class
+                  </Text>
+                </View>
+              )}
               <TouchableOpacity
                 className="p-4 border-t border-gray-200 items-center"
                 onPress={() => setShowSubjectModal(false)}
@@ -125,7 +151,7 @@ const SubjectSelectionScreen = () => {
       <View className="mb-6 mx-2">
         <Text className="text-lg text-textDark mb-2">Topic</Text>
         <TouchableOpacity
-          className="border border-gray-300 rounded-xl p-4"
+          className="border border-gray-300 rounded-xl p-4 bg-white"
           onPress={() => {
             if (selectedSubject) {
               setShowTopicModal(true);
@@ -138,7 +164,7 @@ const SubjectSelectionScreen = () => {
               !selectedSubject ? "text-gray-400" : "text-textDark"
             }`}
           >
-            {getSelectedTopicName()}
+            {selectedTopic || "Select a topic"}
           </Text>
         </TouchableOpacity>
 
@@ -155,15 +181,19 @@ const SubjectSelectionScreen = () => {
                   Select Topic
                 </Text>
               </View>
-              {filteredTopics.length > 0 ? (
+              {topics.length > 0 ? (
                 <FlatList
-                  data={filteredTopics}
-                  keyExtractor={(item) => item.title}
+                  data={topics}
+                  keyExtractor={(item) => item}
                   renderItem={renderTopicItem}
                 />
               ) : (
                 <View className="p-4 items-center">
-                  <Text className="text-gray-500">No topics available</Text>
+                  <Text className="text-gray-500">
+                    {selectedSubject
+                      ? "No topics available for this subject"
+                      : "Please select a subject first"}
+                  </Text>
                 </View>
               )}
               <TouchableOpacity

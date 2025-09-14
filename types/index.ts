@@ -6,20 +6,19 @@ export interface User {
 }
 
 export interface Subject {
-  id: string;
-  name: string;
+  [subjectName: string]: {
+    [topicName: string]: {
+      chapters: number;
+    };
+  };
 }
 
-export interface Topic {
-  subjectId: string;
-  title: string;
-  description: string;
+export interface ClassStructure {
+  [className: string]: Subject;
 }
 
 export interface Curriculum {
   boards: string[];
-  classes: number[];
-  streams: string[];
-  subjects: Subject[];
-  topics: Topic[];
+  classes: ClassStructure;
+  streams?: string[];
 }

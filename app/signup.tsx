@@ -17,7 +17,7 @@ import { useAuth } from "@/context/AuthContext";
 const SignUpScreen = () => {
   const router = useRouter();
   const { saveUserProfile } = useAuth();
-  const curriculum = curriculumData as Curriculum;
+  const curriculum = curriculumData as unknown as Curriculum;
 
   const [selectedClass, setSelectedClass] = useState<number>();
   const [selectedBoard, setSelectedBoard] = useState<string>();
@@ -109,7 +109,7 @@ const SignUpScreen = () => {
                 </Text>
               </View>
               <FlatList
-                data={curriculum.classes}
+                data={Object.keys(curriculum.classes).map(Number)} // ✅ convert object keys into array of numbers
                 keyExtractor={(item) => item.toString()}
                 renderItem={({ item }) =>
                   renderItem({
@@ -117,6 +117,7 @@ const SignUpScreen = () => {
                     onPress: () => {
                       setSelectedClass(item);
                       setShowClassModal(false);
+                      setSelectedStream(undefined); // reset stream if class changes
                     },
                   })
                 }
