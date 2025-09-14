@@ -84,7 +84,6 @@ const SubjectSelectionScreen = () => {
         Select Subject and Topic
       </Text>
 
-      {/* Subject Selection */}
       <View className="mb-6 mx-2">
         <Text className="text-lg text-textDark mb-2">Subject</Text>
         <TouchableOpacity
@@ -123,7 +122,6 @@ const SubjectSelectionScreen = () => {
         </Modal>
       </View>
 
-      {/* Topic Selection */}
       <View className="mb-6 mx-2">
         <Text className="text-lg text-textDark mb-2">Topic</Text>
         <TouchableOpacity

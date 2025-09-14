@@ -54,7 +54,7 @@ const SignUpScreen = () => {
   };
 
   const handleBack = () => {
-    router.back(); // Go back to the previous screen
+    router.back(); 
   };
 
   const renderItem = ({
@@ -76,7 +76,6 @@ const SignUpScreen = () => {
 
   return (
     <ScrollView className="flex-1 bg-[#F8F8F8] p-6">
-      {/* Back Button */}
       <TouchableOpacity
         onPress={handleBack}
         className="flex-row items-center mt-7 mb-4"
@@ -90,7 +89,6 @@ const SignUpScreen = () => {
         Complete Your Profile
       </Text>
 
-      {/* Class Selection */}
       <View className="mb-6">
         <Text className="text-lg text-textDark mb-2">Class</Text>
         <TouchableOpacity
@@ -134,7 +132,6 @@ const SignUpScreen = () => {
         </Modal>
       </View>
 
-      {/* Board Selection */}
       <View className="mb-6">
         <Text className="text-lg text-textDark mb-2">Board</Text>
         <TouchableOpacity

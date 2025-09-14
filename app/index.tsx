@@ -21,7 +21,6 @@ const LoginScreen = () => {
 
   return (
     <View className="flex-1 justify-center items-center bg-white p-6">
-      {/* Logo and Tagline */}
       <View className="items-center mb-2">
         <Image
           source={require("../assets/companyLogo.png")}
@@ -29,11 +28,9 @@ const LoginScreen = () => {
         />
       </View>
 
-      {/* Login Buttons */}
       <View className="">
         <TouchableOpacity
           className="flex-row gap-4 bg-white border border-gray-300 rounded-xl py-4 px-6 mb-4 items-center"
-          // onPress={handleGoogleLogin}
         >
           <AntDesign name="google" size={24} color="black" />
           <Text className="text-textDark font-semibold">
