@@ -1,50 +1,210 @@
-# Welcome to your Expo app 👋
+  # LearnNow Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application built with Expo, TypeScript, and NativeWind (Tailwind CSS for React Native) for educational purposes.
 
-## Get started
+## App Overview
 
-1. Install dependencies
+LearnNow is a mobile learning platform that allows users to:
 
-   ```bash
-   npm install
-   ```
+Login with Google or Phone (simulated)
 
-2. Start the app
+Complete their educational profile (class, board, stream)
 
-   ```bash
-    npx expo start
-   ```
+Select subjects and topics from a curated curriculum
 
-In the output, you'll find options to open the app in a
+Access learning materials through a clean, intuitive interface
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🛠️ Tech Stack
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Framework: React Native with Expo
 
-## Get a fresh project
+Language: TypeScript
 
-When you're ready, run:
+Styling: NativeWind (Tailwind CSS for React Native)
 
-```bash
-npm run reset-project
+Navigation: Expo Router (file-based routing)
+
+State Management: React Context API
+
+Storage: AsyncStorage for local data persistence
+
+Icons: @expo/vector-icons
+
+## 📋 Prerequisites
+
+Before running this project, make sure you have:
+
+Node.js (v16 or higher)
+
+npm or yarn package manager
+
+Expo CLI installed globally (npm install -g expo-cli)
+
+iOS Simulator (for Mac users) or Android Studio (for Android emulator)
+
+Expo Go app on your physical device (for testing on real device)
+
+## Installation & Setup
+
+Clone the repository
+```
+git clone <repository-url>
+cd LearnNow
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Install dependencies
+```
+npm install
+# or
+yarn install
+```
+## Install Expo CLI globally (if not already installed)
 
-## Learn more
+```
+npm install -g expo-cli
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Start the development server
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+npm start
+# or
+yarn start
+# or
+expo start
+```
+## Run on specific platform
 
-## Join the community
+Press a for Android emulator
 
-Join our community of developers creating universal apps.
+Press i for iOS simulator
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Scan QR code with Expo Go app for physical device
+
+## Project Structure
+```
+LearnNow/
+├── app/                    # Expo Router pages
+│   ├── _layout.tsx        # Root layout with navigation
+│   ├── index.tsx          # Login screen
+│   ├── signup.tsx         # Education profile setup
+│   ├── subject-selection.tsx # Subject & topic selection
+│   └── questions.tsx      # Dummy questions screen
+├── assets/                # Static assets
+│   ├── curriculum.json    # Curriculum data
+│   └── companyLogo.png    # App logo
+├── components/            # Reusable components
+├── context/               # React Context providers
+│   └── AuthContext.tsx    # Authentication context
+├── types/                 # TypeScript type definitions
+├── constants/             # App constants
+│   └── colors.ts          # Color palette
+```
+
+##Features
+Authentication Flow
+Simulated login with Google or Phone options
+
+Context-based authentication state management
+
+Automatic redirect based on user profile completion
+
+User Profile
+Class selection (1-12)
+
+Board selection (CBSE, ICSE, State)
+
+Stream selection (Science, Commerce, Arts) for classes > 10
+
+Local persistence using AsyncStorage
+
+Curriculum Navigation
+Subject selection from JSON data
+
+Topic filtering based on selected subject
+
+Clean, responsive UI with brand colors
+
+UI/UX
+Responsive design that works on various screen sizes
+
+Consistent branding with AbhyasilT colors:
+
+Primary: #FE904B (orange)
+
+Secondary: #FCB627 (yellow)
+
+Accent: #B06D2A (amber)
+
+Text/Dark: #2A262B
+
+Background: #FFFFFF / Off-white
+
+Rounded buttons and consistent styling
+
+## Data Structure
+The app uses a local JSON file (assets/curriculum.json) with the following structure:
+
+```
+{
+  "boards": ["CBSE", "ICSE", "State"],
+  "classes": [8, 9, 10, 11, 12],
+  "streams": ["Science", "Commerce", "Arts"],
+  "subjects": [
+    {"id": "math", "name": "Mathematics"},
+    {"id": "sci", "name": "Science"},
+    {"id": "eng", "name": "English"}
+  ],
+  "topics": [
+    {"subjectId": "math", "title": "Calculus", "description": "Intro to Calculus"},
+    {"subjectId": "sci", "title": "Photosynthesis", "description": "Process in plants"},
+    {"subjectId": "eng", "title": "Grammar", "description": "Basic parts of speech"}
+  ]
+}
+```
+## Build for Production
+To build for production:
+
+```
+expo build:ios
+```
+Build for Android
+```
+expo build:android
+```
+Create standalone builds
+
+```
+# For iOS
+expo build:ios -t archive
+
+# For Android
+expo build:android -t app-bundle
+```
+
+## NativeWind Configuration
+
+The project uses NativeWind for styling. Configuration files:
+
+tailwind.config.js - Tailwind configuration
+
+babel.config.js - Babel plugin configuration
+
+## 📸 Screenshots
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+  <img src="./screenshots/1.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/2.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/3.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/4.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/5.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/6.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/7.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/8.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/9.jpg" width="200" alt="Login Screen">
+  <img src="./screenshots/10.jpg" width="200" alt="Login Screen">
+</div>
+
+## Development Time: 24 hours
+## Developer: Vasu Sharma  
+## Date: 9/14/2025
