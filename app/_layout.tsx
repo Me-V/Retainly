@@ -1,52 +1,22 @@
-import { Stack, useRouter } from "expo-router";
+// app/_layout.tsx
+import { SplashScreen, Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import React, { useEffect } from "react";
 import "./globals.css";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { View, ActivityIndicator } from "react-native";
-import { useEffect } from "react";
 
-function AuthGuard() {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        router.replace("/"); // login
-      } else if (user.isNewUser) {
-        router.replace("/signup"); // profile setup
-      } else {
-        router.replace("/subject-selection"); // normal app flow
-      }
-    }
-  }, [isLoading, user]);
-
-  if (isLoading) {
-    return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <ActivityIndicator size="large" color="#FE904B" />
-      </View>
-    );
-  }
-
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="signup" />
-      <Stack.Screen name="subject-selection" />
-      <Stack.Screen name="questions" />
-    </Stack>
-  );
-}
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useEffect(() => {
+    // hide splash when ready
+    SplashScreen.hideAsync();
+  }, []);
+
   return (
     <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: true }} />
       <StatusBar style="inverted" />
-      <AuthProvider>
-        <AuthGuard />
-      </AuthProvider>
     </SafeAreaProvider>
   );
 }

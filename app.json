@@ -2,6 +2,7 @@
   "expo": {
     "name": "Learn Now",
     "slug": "expo-project",
+    "owner": "thvasu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/companyLogo.png",

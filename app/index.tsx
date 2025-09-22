@@ -1,86 +1,53 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Image, useWindowDimensions } from "react-native";
-import { useRouter } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { useAuth } from "@/context/AuthContext";
+import * as React from "react";
+import { Button } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+import { makeRedirectUri } from "expo-auth-session";
 
-const LoginScreen = () => {
-  const router = useRouter();
-  const { login } = useAuth();
-  const { width } = useWindowDimensions();
-  const isTablet = width >= 768;
+WebBrowser.maybeCompleteAuthSession();
 
+export default function ProfileScreen() {
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    clientId:
+      "90805553457-nleg0gn2d3tsqd3nhr73col8oehaa5rl.apps.googleusercontent.com",
+    redirectUri: makeRedirectUri({
+      //@ts-ignore
+      useProxy: true, // This will use Expo's proxy with a proper domain
+    }),
+  });
 
-  const handlePhoneLogin = () => {
-    login(true); // true means the user is new ...
-    router.push("/signup");
-  };
+  // Log the redirect URI to see what it generates
+  React.useEffect(() => {
+    const uri = makeRedirectUri({
+      //@ts-ignore
+      useProxy: true,
+    });
+    console.log("🔍 Redirect URI with proxy:", uri);
+  }, []);
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      console.log("✅ Authentication successful");
+
+      fetch("http://10.189.84.153:8000/api/auth/google/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id_token=${id_token}`,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Backend response:", data);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [response]);
 
   return (
-    <View
-      className="flex-1 justify-center items-center bg-white"
-      style={{ padding: isTablet ? 32 : 16 }}
-    >
-      {/* Logo */}
-      <View className="items-center mb-6">
-        <Image
-          source={require("../assets/companyLogo.png")}
-          style={{
-            width: isTablet ? 260 : 180,
-            height: isTablet ? 260 : 180,
-            marginBottom: 20,
-            resizeMode: "contain",
-          }}
-        />
-      </View>
-
-      {/* Buttons */}
-      <View style={{ width: isTablet ? "50%" : "100%" }}>
-        <TouchableOpacity
-          className="flex-row bg-white border border-gray-300 rounded-xl items-center justify-center"
-          style={{
-            paddingVertical: isTablet ? 18 : 14,
-            paddingHorizontal: isTablet ? 28 : 20,
-            marginBottom: isTablet ? 20 : 14,
-          }}
-        >
-          <AntDesign name="google" size={isTablet ? 28 : 22} color="black" />
-          <Text
-            className="text-textDark font-semibold"
-            style={{
-              marginLeft: 12,
-              fontSize: isTablet ? 20 : 16,
-            }}
-          >
-            Continue with Google
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          className="bg-[#FE904B] rounded-xl items-center"
-          onPress={handlePhoneLogin}
-          style={{
-            paddingVertical: isTablet ? 18 : 14,
-            paddingHorizontal: isTablet ? 28 : 20,
-          }}
-        >
-          <Text
-            className="text-white font-semibold"
-            style={{ fontSize: isTablet ? 20 : 16 }}
-          >
-            Save And Continue
-          </Text>
-        </TouchableOpacity>
-
-        <Text
-          className="text-[#FE904B] font-semibold mt-4 text-center"
-          style={{ fontSize: isTablet ? 18 : 14 }}
-        >
-          Class and board are required
-        </Text>
-      </View>
-    </View>
+    <Button
+      disabled={!request}
+      title="Login with Google"
+      onPress={() => promptAsync()}
+    />
   );
-};
-
-export default LoginScreen;
+}
