@@ -1,7 +1,7 @@
 // services/auth.ts
 export async function loginWithGoogle(idToken: string) {
   try {
-    const res = await fetch("http://10.242.145.153:8000/api/auth/google/", {
+    const res = await fetch(process.env.BASE_URL + "/api/auth/google/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `id_token=${idToken}`,
