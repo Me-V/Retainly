@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Learn Now",
-    "slug": "expo-project",
+    "name": "Retainly",
+    "slug": "retainly",
     "owner": "thvasu",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,7 +17,7 @@
         "foregroundImage": "./assets/companyLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.thvasu.expoproject"
+      "package": "com.thvasu.retainly"
     },
     "web": {
       "bundler": "metro",

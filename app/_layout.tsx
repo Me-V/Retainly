@@ -4,6 +4,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import "./globals.css";
+import SafeScreen from "@/components/safeScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -15,8 +16,12 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: true }} />
-      <StatusBar style="inverted" />
+      <SafeScreen>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)/index" />
+        </Stack>
+      </SafeScreen>
+      <StatusBar style="dark" />
     </SafeAreaProvider>
   );
 }
