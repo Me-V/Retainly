@@ -1,12 +1,6 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StatusBar,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 
 const SignUpScreen = () => {
   const [firstName, setFirstName] = useState("");
@@ -16,9 +10,12 @@ const SignUpScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
-    <SafeAreaView>
-      <StatusBar />
-
+    <LinearGradient
+      colors={["#FFFFFF", "#E4C7A6"]}
+      start={{ x: 0, y: 0 }} // top
+      end={{ x: 0, y: 1 }} // bottom
+      className="flex-1"
+    >
       {/* Header */}
 
       {/* Main Content */}
@@ -43,14 +40,14 @@ const SignUpScreen = () => {
           </Text>
           <View className="flex-row space-x-3 gap-10">
             <TextInput
-              className="flex-1 bg-white px-4 py-4 rounded-lg text-gray-900"
+              className="flex-1 shadow-lg shadow-black bg-white px-4 py-4 rounded-lg text-gray-900"
               placeholder=""
               value={firstName}
               onChangeText={setFirstName}
               placeholderTextColor="#9CA3AF"
             />
             <TextInput
-              className="flex-1 bg-white px-4 py-4 rounded-lg text-gray-900"
+              className="flex-1 shadow-lg shadow-black bg-white px-4 py-4 rounded-lg text-gray-900"
               placeholder=""
               value={lastName}
               onChangeText={setLastName}
@@ -65,7 +62,7 @@ const SignUpScreen = () => {
             Email Address
           </Text>
           <TextInput
-            className="bg-white px-4 py-4 rounded-lg text-gray-900"
+            className="shadow-lg shadow-black bg-white px-4 py-4 rounded-lg text-gray-900"
             placeholder=""
             value={email}
             onChangeText={setEmail}
@@ -81,7 +78,7 @@ const SignUpScreen = () => {
             Create Password
           </Text>
           <TextInput
-            className="bg-white px-4 py-4 rounded-lg text-gray-900"
+            className="shadow-lg shadow-black bg-white px-4 py-4 rounded-lg text-gray-900"
             placeholder=""
             value={password}
             onChangeText={setPassword}
@@ -96,7 +93,7 @@ const SignUpScreen = () => {
             Confirm Password
           </Text>
           <TextInput
-            className="bg-white px-4 py-4 rounded-lg text-gray-900"
+            className="shadow-lg shadow-black bg-white px-4 py-4 rounded-lg text-gray-900"
             placeholder=""
             value={confirmPassword}
             onChangeText={setConfirmPassword}
@@ -118,13 +115,13 @@ const SignUpScreen = () => {
         {/* Terms & Conditions */}
         <View className="items-center">
           <TouchableOpacity onPress={() => console.log("Terms pressed")}>
-            <Text className="text-blue-600 text-sm underline">
+            <Text className="text-black text-sm underline">
               Terms & Conditions
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </LinearGradient>
   );
 };
 

@@ -5,7 +5,9 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import "./globals.css";
 import SafeScreen from "@/components/safeScreen";
-
+import { persistor, store } from "@/store";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -15,13 +17,17 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <SafeScreen>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(auth)/index" />
-        </Stack>
-      </SafeScreen>
-      <StatusBar style="dark" />
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <SafeAreaProvider>
+          <SafeScreen>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(auth)/index" />
+            </Stack>
+          </SafeScreen>
+          <StatusBar style="dark" />
+        </SafeAreaProvider>
+      </PersistGate>
+    </Provider>
   );
 }
