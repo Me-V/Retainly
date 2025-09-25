@@ -7,8 +7,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
-  Image,
 } from "react-native";
 import { MailSVG } from "@/assets/logo";
 import { router } from "expo-router";
@@ -18,7 +16,6 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
   return (
     <LinearGradient

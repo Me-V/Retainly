@@ -1,14 +1,12 @@
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { MyLogo } from "@/assets/logo";
 // import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   GoogleSignin,
-  statusCodes,
   isSuccessResponse,
-  isErrorWithCode,
 } from "@react-native-google-signin/google-signin";
 import { setUser } from "@/store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";

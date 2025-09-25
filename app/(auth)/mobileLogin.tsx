@@ -14,8 +14,6 @@ import { MobileLogo } from "@/assets/logo";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
   return (
     <LinearGradient
