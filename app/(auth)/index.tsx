@@ -13,6 +13,7 @@ import {
 import { setUser } from "@/store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { loginWithGoogle } from "@/services/api.auth";
 
 GoogleSignin.configure({
   webClientId:
@@ -29,38 +30,37 @@ export default function SignInScreen() {
     try {
       await GoogleSignin.hasPlayServices();
       const response = await GoogleSignin.signIn();
-      if (isSuccessResponse(response)) {
-        if (response.data.idToken) {
-          dispatch(
-            setUser({ token: response.data.idToken, userInfo: response.data })
-          );
-        }
 
-        console.log(response.data);
+      if (isSuccessResponse(response)) {
+        const idToken = response.data.idToken;
+
+        if (idToken) {
+          // 🔥 Call your Django API with Google ID token
+          const backendResponse = await loginWithGoogle(idToken);
+
+          if (backendResponse?.token) {
+            // Store the Django token, not Google’s idToken
+
+            console.log("backendResponse#########", backendResponse);
+            dispatch(
+              setUser({
+                token: backendResponse.token, // DRF token
+                userInfo: response.data, // optional: Google profile
+              })
+            );
+          } else {
+            Alert.alert("Login failed", "Server did not return a token");
+          }
+        }
       } else {
-        // sign in was cancelled by user
         console.log("sign in was cancelled by user");
       }
     } catch (error) {
-      if (isErrorWithCode(error)) {
-        switch (error.code) {
-          case statusCodes.IN_PROGRESS:
-            // operation (eg. sign in) already in progress
-            Alert.alert("In Progress");
-            break;
-          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            // Android only, play services not available or outdated
-            Alert.alert("Play Services Not Available");
-            break;
-          default:
-          // some other error happened
-        }
-      } else {
-        // an error that's not related to google sign in occurred
-        Alert.alert("Something went wrong");
-      }
+      Alert.alert("Something went wrong");
+      console.error(error);
     }
   };
+
   return (
     <LinearGradient
       colors={["#FFFFFF", "#E4C7A6"]}
@@ -84,9 +84,7 @@ export default function SignInScreen() {
           </Text>
 
           {token ? (
-            <Text className="text-center text-black text-xl mb-8">
-              Already Signed In
-            </Text>
+            <Text className="text-center text-black text-xl mb-8">{token}</Text>
           ) : (
             <TouchableOpacity
               className="bg-[#FFF3C4] flex-row items-center justify-center border border-gray-300 rounded-3xl py-4 mb-4"
