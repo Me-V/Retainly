@@ -82,7 +82,12 @@ export default function SignInScreen() {
           </Text>
 
           {token ? (
-            <Text className="text-center text-black text-xl mb-8">{token}</Text>
+            <Text className="text-center text-black text-xl mb-8">
+              {token}{" "}
+              <Text className="text-red-500 text-xl font-medium mt-9">
+                will redirect to home screen when made !
+              </Text>
+            </Text>
           ) : (
             <TouchableOpacity
               className="bg-[#FFF3C4] flex-row items-center justify-center border border-gray-300 rounded-3xl py-4 mb-4"

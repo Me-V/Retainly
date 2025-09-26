@@ -17,7 +17,7 @@
         "foregroundImage": "./assets/companyLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.thvasu.expoproject"
+      "package": "com.education.retainly"
     },
     "web": {
       "bundler": "metro",
