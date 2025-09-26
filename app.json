@@ -17,7 +17,7 @@
         "foregroundImage": "./assets/companyLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.education.retainly"
+      "package": "com.education.retainlyapp"
     },
     "web": {
       "bundler": "metro",
