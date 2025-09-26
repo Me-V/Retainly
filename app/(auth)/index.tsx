@@ -15,7 +15,7 @@ import { loginWithGoogle } from "@/services/api.auth";
 
 GoogleSignin.configure({
   webClientId:
-    "90805553457-nleg0gn2d3tsqd3nhr73col8oehaa5rl.apps.googleusercontent.com",
+    process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
 });
 
 export default function SignInScreen() {

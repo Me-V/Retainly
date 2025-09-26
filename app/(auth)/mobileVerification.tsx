@@ -7,15 +7,30 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
+  Alert,
 } from "react-native";
 import { MobileSmsSVG } from "@/assets/logo";
 import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams, router } from "expo-router";
 
-const VerifyEmailScreen = () => {
+// ✅ Firebase
+import {
+  getAuth,
+  PhoneAuthProvider,
+  signInWithCredential,
+} from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "@/services/config";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const VerifyMobileScreen = () => {
+  const { verificationId, phoneNumber } = useLocalSearchParams();
   const [code, setCode] = useState("");
   const [countdown, setCountdown] = useState(30);
 
-  // Add countdown timer
+  // Countdown timer
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -23,17 +38,33 @@ const VerifyEmailScreen = () => {
     }
   }, [countdown]);
 
-  const handleVerify = () => {
-    console.log("Verification Code:", code);
-    // Handle verification logic here
+  const confirmVerificationCode = async () => {
+    try {
+      const credential = PhoneAuthProvider.credential(
+        verificationId as string,
+        code
+      );
+      const userCredential = await signInWithCredential(auth, credential);
+
+      // ✅ Get Firebase ID token
+      const idToken = await userCredential.user.getIdToken();
+
+      Alert.alert("Success ✅", `Firebase ID Token:\n\n${idToken}`);
+      setCode("");
+
+      // router.replace("/home");
+    } catch (err: any) {
+      console.log(err);
+      Alert.alert("Error", err.message);
+    }
   };
 
   const handleResendCode = () => {
     setCountdown(30);
-    // Handle resend logic here
+    // 🔄 You can re-trigger send OTP logic here if needed
   };
 
-  // Define styles object since StyleSheet is not imported
+  // Keep your same style placeholders
   const styles = {
     container: {},
     pinCodeContainer: {},
@@ -48,8 +79,8 @@ const VerifyEmailScreen = () => {
   return (
     <LinearGradient
       colors={["#FFFFFF", "#E4C7A6"]}
-      start={{ x: 0, y: 0 }} // top
-      end={{ x: 0, y: 1 }} // bottom
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
       className="flex-1"
     >
       <KeyboardAvoidingView
@@ -69,7 +100,7 @@ const VerifyEmailScreen = () => {
               Verify Your Number
             </Text>
             <Text className="text-lg text-gray-600 text-center px-8 mt-5">
-              Verfication Code
+              Verification Code sent to {phoneNumber}
             </Text>
           </View>
 
@@ -82,12 +113,13 @@ const VerifyEmailScreen = () => {
                 placeholderTextColor="#9CA3AF"
                 value={code}
                 onChangeText={setCode}
+                keyboardType="number-pad"
               />
             </View>
 
             <TouchableOpacity
               className="bg-[#F98455] py-4 rounded-lg mb-2"
-              onPress={() => {}}
+              onPress={confirmVerificationCode}
             >
               <Text className="text-white text-center text-base font-medium">
                 Verify
@@ -124,4 +156,4 @@ const VerifyEmailScreen = () => {
   );
 };
 
-export default VerifyEmailScreen;
+export default VerifyMobileScreen;

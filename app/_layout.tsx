@@ -8,7 +8,11 @@ import SafeScreen from "@/components/safeScreen";
 import { persistor, store } from "@/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { LogBox } from "react-native";
 SplashScreen.preventAutoHideAsync();
+LogBox.ignoreLogs([
+  "Support for defaultProps will be removed from function components"
+]);
 
 export default function RootLayout() {
   useEffect(() => {
