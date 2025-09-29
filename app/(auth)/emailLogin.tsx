@@ -4,142 +4,135 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import { MailSVG } from "@/assets/logo";
-import { router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { firebaseConfig } from "@/services/config";
+import { signupWithEmailPassword } from "@/services/api.auth";
 
-const LoginScreen = () => {
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+export default function EmailSignupScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // 1️⃣ Initial signup: Firebase create user + send verification email
+  const handleSignup = async () => {
+    if (!email || !password) {
+      return Alert.alert("Error", "Please enter email and password");
+    }
+
+    setLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await sendEmailVerification(userCredential.user);
+      setEmailSent(true);
+      Alert.alert(
+        "Verification Email Sent",
+        "Please check your email and click the verification link before proceeding."
+      );
+    } catch (err: any) {
+      console.log(err);
+      Alert.alert("Signup Error", err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckVerification = async () => {
+    setLoading(true);
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("No logged in user");
+
+      // ✅ Force refresh token to reflect emailVerified
+      const idToken = await user.getIdToken(true);
+
+      // Call backend endpoint
+      const res = await signupWithEmailPassword(email, password, idToken);
+
+      Alert.alert("Success", "Email verified! You are now logged in.");
+      console.log("~Vasu :- token", res?.token);
+      // TODO: Navigate to dashboard/home
+    } catch (err: any) {
+      console.log(err);
+
+      const backendMsg =
+        err.response?.data?.detail ||
+        "Please check your email for verification.";
+      Alert.alert("Email not verified", backendMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <LinearGradient
-      colors={["#FFFFFF", "#E4C7A6"]}
-      start={{ x: 0, y: 0 }} // top
-      end={{ x: 0, y: 1 }} // bottom
-      className="flex-1"
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
-      >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
+    <View style={{ flex: 1, padding: 20, justifyContent: "center" }}>
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        style={{ borderWidth: 1, marginBottom: 10, padding: 10 }}
+      />
+      <TextInput
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        style={{ borderWidth: 1, marginBottom: 10, padding: 10 }}
+      />
+
+      {loading && (
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
+          style={{ marginBottom: 10 }}
+        />
+      )}
+
+      {!emailSent ? (
+        <TouchableOpacity
+          onPress={handleSignup}
+          style={{
+            backgroundColor: "blue",
+            padding: 15,
+            opacity: loading ? 0.6 : 1,
+          }}
+          disabled={loading}
         >
-          {/* Header Section */}
-          <View className="flex flex-row items-center justify-center pt-32 pb-10 gap-10">
-            <View className="flex flex-col items-start gap-2">
-              <Text className="text-3xl text-black font-semibold">
-                Login with
-              </Text>
-              <Text className="text-3xl text-black font-semibold">Email</Text>
-            </View>
-            <MailSVG />
-          </View>
-
-          {/* Form Section */}
-          <View className="px-8 pt-8">
-            {/* Email Input */}
-            <View className="mb-6">
-              <Text className="text-lg font-semibold text-gray-700 mb-2">
-                Email Address
-              </Text>
-              <View className="relative">
-                <TextInput
-                  className="w-full shadow-lg shadow-black bg-gray-50 border border-gray-300 rounded-lg pl-4 py-4 text-gray-900"
-                  placeholder="Enter your email"
-                  placeholderTextColor="#9CA3AF"
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-
-            {/* Password Input */}
-            <View className="mb-6">
-              <Text className="text-lg font-semibold text-gray-700 mb-2">
-                Password
-              </Text>
-              <View className="relative">
-                <TextInput
-                  className="w-full shadow-lg shadow-black bg-gray-50 border border-gray-300 rounded-lg pl-4 py-4 text-gray-900"
-                  placeholder="Enter your password"
-                  placeholderTextColor="#9CA3AF"
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry={!showPassword}
-                />
-                <TouchableOpacity
-                  className="absolute right-3 top-3 z-10"
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  {/* {showPassword ? (
-                    <EyeOff size={20} color="#6B7280" />
-                  ) : (
-                    <Eye size={20} color="#6B7280" />
-                  )} */}
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Remember Me & Forgot Password */}
-            {/* <View className="flex-row justify-between items-center mb-8">
-              <TouchableOpacity
-                className="flex-row items-center"
-                onPress={() => setRememberMe(!rememberMe)}
-              >
-                <View
-                  className={`w-5 h-5 border-2 rounded-md mr-2 ${
-                    rememberMe
-                      ? "bg-blue-600 border-blue-600"
-                      : "border-gray-300"
-                  }`}
-                >
-                  {rememberMe && (
-                    <View className="w-full h-full items-center justify-center">
-                      <Text className="text-white text-xs">✓</Text>
-                    </View>
-                  )}
-                </View>
-                <Text className="text-gray-600">Remember me</Text>
-              </TouchableOpacity>
-
-              
-            </View> */}
-
-            {/* Sign In Button */}
-            <TouchableOpacity
-              className="bg-[#F98455] py-4 rounded-lg mb-6"
-              onPress={() => router.push("/emailVerification")}
-            >
-              <Text className="text-white text-center text-base font-medium">
-                Sign In
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="items-end">
-              <Text className="text-[#F98455] font-medium">
-                Forget Password?
-              </Text>
-            </TouchableOpacity>
-
-            <View className="items-center">
-              <Text className="text-black mt-14">Terms & Conditions</Text>
-            </View>
-          </View>
-
-          <View className="h-20" />
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </LinearGradient>
+          <Text style={{ color: "white", textAlign: "center" }}>Sign Up</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={handleCheckVerification}
+          style={{
+            backgroundColor: "green",
+            padding: 15,
+            opacity: loading ? 0.6 : 1,
+          }}
+          disabled={loading}
+        >
+          <Text style={{ color: "white", textAlign: "center" }}>
+            Check Email Verification
+          </Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
-};
-
-export default LoginScreen;
+}

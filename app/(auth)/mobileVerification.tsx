@@ -21,6 +21,7 @@ import {
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/services/config";
+import { signupWithPhoneOTP } from "@/services/api.auth";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -48,14 +49,18 @@ const VerifyMobileScreen = () => {
 
       // ✅ Get Firebase ID token
       const idToken = await userCredential.user.getIdToken();
+      console.log("~Vasu Sharma :- Firebase idToken:", idToken);
 
-      Alert.alert("Success ✅", `Firebase ID Token:\n\n${idToken}`);
-      setCode("");
+      // ✅ Call your backend API to signup
+      const res = await signupWithPhoneOTP(phoneNumber as string, idToken);
+      console.log("~Vasu Sharma :- Backend signup response:", res);
 
-      // router.replace("/home");
+      // ✅ Optionally, navigate to home/dashboard
+      Alert.alert("Success", "Phone verified and signup successful!");
+      // router.replace("/home"); // change to your screen
     } catch (err: any) {
       console.log(err);
-      Alert.alert("Error", err.message);
+      Alert.alert("Error", err.message || "Something went wrong");
     }
   };
 
