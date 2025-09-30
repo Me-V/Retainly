@@ -14,8 +14,7 @@ import { RootState } from "@/store";
 import { loginWithGoogle } from "@/services/api.auth";
 
 GoogleSignin.configure({
-  webClientId:
-    process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
+  webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
 });
 
 export default function SignInScreen() {
@@ -117,7 +116,7 @@ export default function SignInScreen() {
 
           <TouchableOpacity
             className="rounded-xl pt-1 pb-3 mb-8"
-            onPress={() => router.push("/(auth)/signUp")}
+            onPress={() => router.push("/(auth)/email-signup")}
           >
             <Text className="text-[#E03636] font-medium text-base text-center">
               Sign Up (Email)
