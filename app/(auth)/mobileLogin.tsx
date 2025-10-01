@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { MobileLogo } from "@/assets/logo";
+import { BackIcon, MobileLogo2, MyLogo } from "@/assets/logo";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig } from "@/services/config";
 import { router } from "expo-router";
@@ -63,15 +63,17 @@ const MobileLoginScreen = () => {
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
+          <View className="ml-4">
+            <TouchableOpacity onPress={() => router.back()}>
+              <BackIcon />
+            </TouchableOpacity>
+          </View>
           {/* Header Section */}
-          <View className="flex flex-row items-center justify-center pt-[150px] pb-10 gap-10">
-            <View className="flex flex-col items-start gap-2">
-              <Text className="text-3xl text-black font-semibold">
-                Sign up with
-              </Text>
-              <Text className="text-3xl text-black font-semibold">Mobile</Text>
-            </View>
-            <MobileLogo />
+          <View className="items-center mt-16 mb-12">
+            <MyLogo />
+            <Text className="text-[24px] text-black font-bold mt-6">
+              Create Your Account
+            </Text>
           </View>
 
           {/* Recaptcha */}
@@ -79,7 +81,9 @@ const MobileLoginScreen = () => {
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
           />
-
+          <View className="items-center">
+            <MobileLogo2 />
+          </View>
           {/* Phone Number Input */}
           <View className="px-8 pt-8">
             <View className="mb-6">
@@ -87,9 +91,7 @@ const MobileLoginScreen = () => {
                 Enter Mobile Number
               </Text>
               <TextInput
-                className="w-full shadow-lg shadow-black bg-gray-50 border border-gray-300 rounded-lg pl-4 py-4 text-gray-900"
-                placeholder="e.g. +91 9876543210"
-                placeholderTextColor="#9CA3AF"
+                className="w-full shadow-lg shadow-black bg-gray-50 border border-gray-300 pl-4 py-4 text-gray-900 rounded-3xl"
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
                 autoComplete="tel"
@@ -98,17 +100,17 @@ const MobileLoginScreen = () => {
             </View>
 
             <TouchableOpacity
-              className="bg-[#F98455] py-4 rounded-lg mb-6"
+              className="bg-[#F98455] py-4 rounded-3xl mb-6"
               onPress={sendVerificationCode}
             >
               <Text className="text-white text-center text-base font-medium">
-                Send OTP
+                Continue
               </Text>
             </TouchableOpacity>
           </View>
 
           <View className="items-center">
-            <Text className="text-black mt-[150px]">Terms & Conditions</Text>
+            <Text className="text-black mt-20">Terms & Conditions</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

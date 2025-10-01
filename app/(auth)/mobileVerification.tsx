@@ -9,7 +9,7 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import { MobileSmsSVG } from "@/assets/logo";
+import { BackIcon, MobileSmsSVG } from "@/assets/logo";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, router } from "expo-router";
 
@@ -22,11 +22,14 @@ import {
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "@/services/config";
 import { signupWithPhoneOTP } from "@/services/api.auth";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/slices/authSlice";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const VerifyMobileScreen = () => {
+  const dispatch = useDispatch();
   const { verificationId, phoneNumber } = useLocalSearchParams();
   const [code, setCode] = useState("");
   const [countdown, setCountdown] = useState(30);
@@ -49,11 +52,12 @@ const VerifyMobileScreen = () => {
 
       // ✅ Get Firebase ID token
       const idToken = await userCredential.user.getIdToken();
-      console.log("~Vasu Sharma :- Firebase idToken:", idToken);
 
       // ✅ Call your backend API to signup
       const res = await signupWithPhoneOTP(phoneNumber as string, idToken);
-      console.log("~Vasu Sharma :- Backend signup response:", res);
+      console.log("~Vasu Sharma :- Backend mobile login token:", res?.token);
+
+      dispatch(setUser({ token: res?.token, userInfo: { phoneNumber } }));
 
       // ✅ Optionally, navigate to home/dashboard
       Alert.alert("Success", "Phone verified and signup successful!");
@@ -96,16 +100,22 @@ const VerifyMobileScreen = () => {
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
+          <View className="ml-4">
+            <TouchableOpacity onPress={() => router.back()}>
+              <BackIcon />
+            </TouchableOpacity>
+          </View>
           {/* Header Section */}
-          <View className="items-center justify-center pt-36 pb-3">
-            <View className="w-20 h-20 bg-blue-100 rounded-full items-center justify-center mb-4">
+          <View className="items-center justify-center">
+            <View className="w-20 h-20 bg-blue-100 rounded-full items-center justify-center mt-40 mb-4">
               <MobileSmsSVG />
             </View>
-            <Text className="text-2xl font-bold text-gray-900 mt-8 mb-4">
+            <Text className="text-2xl font-bold text-gray-900 mt-8 mb-12">
               Verify Your Number
             </Text>
             <Text className="text-lg text-gray-600 text-center px-8 mt-5">
-              Verification Code sent to {phoneNumber}
+              OTP sent to{" "}
+              <Text className="text-orange-500 font-normal">{phoneNumber}</Text>
             </Text>
           </View>
 
@@ -132,7 +142,7 @@ const VerifyMobileScreen = () => {
             </TouchableOpacity>
 
             {/* Resend Code */}
-            <View className="items-end mb-8">
+            <View className="items-end mb-">
               <TouchableOpacity
                 onPress={handleResendCode}
                 disabled={countdown > 0}
@@ -149,7 +159,7 @@ const VerifyMobileScreen = () => {
 
             {/* Terms & Conditions */}
             <View className="items-center">
-              <Text className="text-black mt-28">Terms & Conditions</Text>
+              <Text className="text-black mt-16">Terms & Conditions</Text>
             </View>
           </View>
 

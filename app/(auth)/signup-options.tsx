@@ -9,7 +9,8 @@ import {
   isSuccessResponse,
 } from "@react-native-google-signin/google-signin";
 import { setUser } from "@/store/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 import { loginWithGoogle } from "@/services/api.auth";
 
 GoogleSignin.configure({
@@ -20,6 +21,7 @@ export default function SignInScreen() {
   // const { promptAsync } = useGoogleAuth();
 
   const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.auth.token);
 
   const signIn = async () => {
     try {
@@ -78,18 +80,29 @@ export default function SignInScreen() {
         {/* Options */}
         <View className="px-8">
           <Text className="text-center text-black text-xl mb-8">
-            Sign In with
+            Get Started with
           </Text>
 
-          <TouchableOpacity
-            className="bg-[#FFF3C4] flex-row items-center justify-center border border-gray-300 rounded-3xl py-4 mb-4"
-            onPress={() => signIn()}
-          >
-            <Text className="text-gray-700 font-medium text-base">Google</Text>
-          </TouchableOpacity>
+          {token ? (
+            <Text className="text-center text-black text-xl mb-8">
+              {token}{" "}
+              <Text className="text-red-500 text-xl font-medium mt-9">
+                will redirect to home screen when made !
+              </Text>
+            </Text>
+          ) : (
+            <TouchableOpacity
+              className="bg-[#FFF3C4] flex-row items-center justify-center border border-gray-300 rounded-3xl py-4 mb-4"
+              onPress={() => signIn()}
+            >
+              <Text className="text-gray-700 font-medium text-base">
+                Google
+              </Text>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity
-            onPress={() => router.push("/(auth)/emailLogin")}
+            onPress={() => router.push("/(auth)/email-signup")}
             className="bg-[#FFF3C4] flex-row items-center justify-center border border-gray-300 rounded-3xl py-4 mb-4"
           >
             <Text className="text-gray-700 font-medium text-base">Email</Text>
@@ -102,17 +115,9 @@ export default function SignInScreen() {
             <Text className="text-gray-700 font-medium text-base">Mobile</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            className="rounded-xl pt-1 pb-3 mt-24"
-            onPress={() => router.push("/(auth)/signup-options")}
-          >
-            <Text className="text-black font-medium text-base text-center">
-              Don't have an account?
+            <Text className="text-black font-medium text-base text-center mt-32">
+              Terms & Conditions
             </Text>
-            <Text className="text-[#E03636] font-medium text-base text-center">
-              Create One
-            </Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </LinearGradient>
